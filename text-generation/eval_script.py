@@ -7,9 +7,9 @@ our_file = sys.argv[1]
 rewrite=False  
 mauve = True 
 coherence = True 
-ppl=True 
-entity_f1 = True 
-disco_coh= False  
+ppl=False  # Disabled
+entity_f1 = False  # Disabled 
+disco_coh= False  # Disabled  
 
 # rewrite=False 
 # mauve = False 
