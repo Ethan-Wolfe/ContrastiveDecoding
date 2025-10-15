@@ -627,15 +627,15 @@ def main(args):
         )
         print(tokenized_datasets)
         if args.prompt_file == 'wikitext':
-            prompt_ids = tokenized_datasets[:2000]['input_ids'] 
-            ref_lst = tokenized_datasets[:2000]['gold'] 
+            prompt_ids = tokenized_datasets[:10]['input_ids']  # Limited to 10 samples for testing
+            ref_lst = tokenized_datasets[:10]['gold']  # Limited to 10 samples for testing 
             # prompt_ids = tokenized_datasets['test'][:2000]['input_ids'] 
             # ref_lst = tokenized_datasets['test'][:2000]['gold'] 
             ref_lst = tokenizer.batch_decode(ref_lst)
             ref_lst = [(0, x) for x in ref_lst]
         elif args.prompt_file == 'cc_news':
-            prompt_ids = tokenized_datasets[:2000]['input_ids'] 
-            ref_lst = tokenized_datasets[:2000]['gold'] 
+            prompt_ids = tokenized_datasets[:10]['input_ids']  # Limited to 10 samples for testing
+            ref_lst = tokenized_datasets[:10]['gold']  # Limited to 10 samples for testing 
             ref_lst = tokenizer.batch_decode(ref_lst)
             ref_lst = [(0, x) for x in ref_lst]
 
