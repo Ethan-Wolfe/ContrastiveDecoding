@@ -2205,7 +2205,18 @@ class GenerationMixin:
             next_token_logits = outputs.logits[:, -1, :]
 
             if model_kwargs['teacher_student']:
-                model_inputs_student =  model_kwargs['student_lm'].prepare_inputs_for_generation(input_ids, **model_kwargs_student)
+                # Context window restriction for amateur/student model (for ablation studies)
+                student_input_ids = input_ids
+                if 'student_context_window' in model_kwargs and model_kwargs['student_context_window'] is not None:
+                    context_window = model_kwargs['student_context_window']
+                    if context_window == -1:
+                        # Use half of the current context
+                        context_window = max(1, input_ids.shape[-1] // 2)
+                    if context_window > 0 and context_window < input_ids.shape[-1]:
+                        # Truncate to last N tokens
+                        student_input_ids = input_ids[:, -context_window:]
+                
+                model_inputs_student =  model_kwargs['student_lm'].prepare_inputs_for_generation(student_input_ids, **model_kwargs_student)
                 outputs_student = model_kwargs['student_lm'](
                     **model_inputs_student,
                     return_dict=True,
@@ -2493,7 +2504,19 @@ class GenerationMixin:
                 # if 'past' in model_kwargs:
                 #     print(model_kwargs['past'][0][0].shape) 
                 # print(model_kwargs_student.keys())
-                model_inputs_student =  model_kwargs['student_lm'].prepare_inputs_for_generation(input_ids, **model_kwargs_student)
+                
+                # Context window restriction for amateur/student model (for ablation studies)
+                student_input_ids = input_ids
+                if 'student_context_window' in model_kwargs and model_kwargs['student_context_window'] is not None:
+                    context_window = model_kwargs['student_context_window']
+                    if context_window == -1:
+                        # Use half of the current context
+                        context_window = max(1, input_ids.shape[-1] // 2)
+                    if context_window > 0 and context_window < input_ids.shape[-1]:
+                        # Truncate to last N tokens
+                        student_input_ids = input_ids[:, -context_window:]
+                
+                model_inputs_student =  model_kwargs['student_lm'].prepare_inputs_for_generation(student_input_ids, **model_kwargs_student)
                 # print(model_inputs_student['input_ids'].shape, model_inputs['input_ids'].shape)
                 # print('student', model_inputs_student['past_key_values'][0][0].shape, model_inputs_student['past_key_values'][1][0].shape)
                 # print('teacher', model_inputs['input_ids'].shape)

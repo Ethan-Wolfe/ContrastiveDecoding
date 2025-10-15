@@ -444,6 +444,14 @@ def get_args():
     parser.add_argument("--ignore_prefix", type=str, default='yes') # IMPORTANT
     parser.add_argument("--use_switch", type=str, default='no')
     
+    # Context window restriction for amateur model (for ablation studies)
+    # None or 0: Use maximum context window (no restriction)
+    # -1: Use half of the maximum context window
+    # 1: Only use the last token (minimum context)
+    # N > 1: Use last N tokens as context
+    parser.add_argument("--student_context_window", type=int, default=None,
+                        help="Restrict context window of amateur/student model. None=full context, -1=half context, 1=last token only, N>1=last N tokens")
+    
 
     parser.add_argument("--prefix", type=str, default="", help="Text added prior to input.")
     parser.add_argument("--padding_text", type=str, default="", help="Deprecated, the use of `--prefix` is preferred.")
@@ -786,7 +794,8 @@ def main(args):
                 student_min_prob=args.student_min_prob,
                 student_temperature=args.student_temperature,
                 use_cap_student=(args.use_cap_student=='yes'), #cap student debug
-                use_switch=(args.use_switch == 'yes')
+                use_switch=(args.use_switch == 'yes'),
+                student_context_window=args.student_context_window  # Context window restriction for ablation studies
             )
             print('student=smaller model')
 
@@ -954,7 +963,8 @@ def main(args):
                 student_min_prob=args.student_min_prob,
                 student_temperature=args.student_temperature,
                 use_cap_student=(args.use_cap_student=='yes'), #cap student debug
-                use_switch=(args.use_switch == 'yes')
+                use_switch=(args.use_switch == 'yes'),
+                student_context_window=args.student_context_window  # Context window restriction for ablation studies
             )
             print('contrastive sampling: student=smaller model')
 
@@ -979,7 +989,8 @@ def main(args):
                 student_min_prob=args.student_min_prob,
                 student_temperature=args.student_temperature,
                 use_cap_student=(args.use_cap_student=='yes'), #cap student debug
-                use_switch=(args.use_switch == 'yes')
+                use_switch=(args.use_switch == 'yes'),
+                student_context_window=args.student_context_window  # Context window restriction for ablation studies
             )
             print('contrastive greedy search: student=smaller model')
 
